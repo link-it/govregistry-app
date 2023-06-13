@@ -134,7 +134,7 @@ export class UserAuthorizationsComponent implements OnInit, OnDestroy {
       (response: any) => {
         if (response) {
           this._spin = true;
-          this.apiService.deleteElement('authorizations', _aId).subscribe({
+          this.apiService.deleteElementRelated('users', this.id, `authorizations/${_aId}`).subscribe({
             next: (response: any) => {
               this._spin = false;
               this.refresh();

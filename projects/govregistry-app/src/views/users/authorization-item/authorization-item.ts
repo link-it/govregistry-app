@@ -1,6 +1,7 @@
 export class AuthorizationItem {
 
   id: number | null = null;
+  application_id: number | null = null;
   role_id: number | null = null;
   role: any | null = null;
   organizations: number[] = [];

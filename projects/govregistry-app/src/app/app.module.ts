@@ -10,21 +10,22 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { environment } from '../environments/environment';
+import { environment } from '@app/environments/environment';
 
 import { VendorsModule } from 'projects/vendors/src/lib/vendors.module';
 import { ComponentsModule } from 'projects/components/src/lib/components.module';
 import { LinkLabModule } from 'projects/link-lab/src/lib/link-lab.module';
 import { CustomFormsModule } from 'projects/tools/src/lib/custom-forms-validators/custom-forms.module';
 
-import { GpLayoutModule } from '../containers/gp-layout/gp-layout.module';
+import { GpLayoutModule } from '@app/containers/gp-layout/gp-layout.module';
 
 import { ConfigService } from 'projects/tools/src/lib/config.service';
 import { AuthGuard, PermissionGuard } from '../guard';
 
 import { httpInterceptorProviders } from 'projects/tools/src/lib/interceptors/index';
 
-import { HasPermissionModule } from '../directives/has-permission/has-permission.module';
+import { HasPermissionModule } from '@app/directives/has-permission/has-permission.module';
+import { DisableControlModule } from '@app/directives/disable-control/disable-control.module';
 
 // Import containers
 import {
@@ -71,6 +72,7 @@ export function ConfigLoader(configService: ConfigService) {
     LinkLabModule,
     CustomFormsModule,
     HasPermissionModule,
+    DisableControlModule,
 
     GpLayoutModule
   ],

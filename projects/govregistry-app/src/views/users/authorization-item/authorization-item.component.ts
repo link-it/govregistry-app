@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Tools } from 'projects/tools/src/lib/tools.service';
 import { CustomValidators } from 'projects/tools/src/lib/custom-forms-validators/custom-forms.module';
 import { OpenAPIService } from '@services/openAPI.service';
+import { environment } from '@app/environments/environment';
 
 import { AuthorizationItem } from './authorization-item';
 
@@ -53,6 +54,19 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
   _savingAuthorization: boolean = false;
 
   minLengthTerm = 1;
+
+  applicationsList: any[] = [
+    { label: 'GovHub', value: 'govhub', id: 1 },
+    { label: 'GovRegistry', value: 'govregistry', id: 2 },
+    { label: 'GovIO', value: 'govio', id: 3 },
+    { label: 'GovIO Planner', value: 'govio-planner', id: 4 },
+  ];
+
+  applications$!: Observable<any[]>;
+  applicationsInput$ = new Subject<string>();
+  applicationsLoading: boolean = false;
+
+  rolesList: any[] = [];
 
   roles$!: Observable<any[]>;
   rolesInput$ = new Subject<string>();
@@ -107,8 +121,9 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
       this._servCount = _arrServ.length - this._avatarLimit;
     } else {
       const _data: AuthorizationItem = new AuthorizationItem({ ...this.data });
-      console.log('_data', _data);
       this._initForm(_data);
+      this._initApplications();
+      // this._initApplicationsSelect([]);
       this._initRolesSelect([]);
       this._initOrganizationsSelect([]);
       this._initServicesSelect([]);
@@ -137,9 +152,13 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
       Object.keys(data).forEach((key) => {
         let value = '';
         switch (key) {
-          case 'role_id':
-            value = data[key] ? data[key] : null;
+          case 'application_id':
+            value = data[key] ? data[key] : '';
             _group[key] = new UntypedFormControl(value, [ Validators.required ]);
+            break;
+          case 'role_id':
+            value = data[key] ? data[key] : '';
+            _group[key] = new UntypedFormControl({ value: value, disabled: true }, [ Validators.required ]);
             break;
           case 'organizations':
           case 'services':
@@ -246,6 +265,63 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
+  _initApplications() {
+    if (environment.production) {
+      this.getData('applications').subscribe(
+        (response: any) => {
+          this.applicationsList = response.items.map((item: any) => {
+            return { label: item.application_name, value: item.application_id };
+          });
+        },
+        (error: any) => {
+          this.applicationsList = [];
+        }
+      );
+    } else {
+      this.applicationsList = [
+        {
+          "application_id": "govio",
+          "application_name": "GovIO",
+          "deployed_uri": "http://localhost:8083/govio"
+        },
+        {
+          "application_id": "govio_planner",
+          "application_name": "GovIO Planner",
+          "deployed_uri": "http://localhost:10003"
+        },
+        {
+          "application_id": "govregistry",
+          "application_name": "GovRegistry",
+          "deployed_uri": "http://localhost:10001",
+          "webapp_uri": "http://localhost:8083/govregistry-app"
+        }
+      ].map((item: any) => {
+        return { label: item.application_name, value: item.application_id };
+      });;
+    }
+  }
+
+  _initApplicationsSelect(defaultValue: any[] = []) {
+    this.applications$ = concat(
+      of(defaultValue),
+      this.applicationsInput$.pipe(
+        // filter(res => {
+        //   return res !== null && res.length >= this.minLengthTerm
+        // }),
+        startWith(''),
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => this.applicationsLoading = true),
+        switchMap((term: any) => {
+          return this.getData('applications', term).pipe(
+            catchError(() => of([])), // empty list on error
+            tap(() => this.applicationsLoading = false)
+          )
+        })
+      )
+    );
+  }
+
   _initRolesSelect(defaultValue: any[] = []) {
     this.roles$ = concat(
       of(defaultValue),
@@ -309,7 +385,7 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
     );
   }
 
-  getData(model: string, term: any = null): Observable<any> {
+  getData(model: string, term: any = null, application: boolean = false): Observable<any> {
     let _options: any = { params: { limit: 100 } };
     if (term) {
       if (typeof term === 'string' ) {
@@ -322,8 +398,15 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
 
     let _sortField: string = '';
     switch (model) {
+      case 'applications':
+        _sortField = 'id';
+        _options.params =  { limit: 100 };
+        break;
       case 'roles':
         _sortField = 'role_name';
+        if (application) {
+          _options.params =  { limit: 100, application_id: term };
+        }
         break;
       case 'organizations':
         _sortField = 'legal_name';
@@ -405,5 +488,21 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
       this._formGroup.controls['services'].setValidators([Validators.required]);
       this._formGroup.controls['services'].updateValueAndValidity();
     }
+  }
+
+  _onChangeApplication(event: any) {
+    const application_id = this._formGroup.controls['application_id'].value;
+    this._formGroup.controls['role_id'].setValue('');
+
+    this.getData('roles', application_id, true).subscribe(
+      (response: any) => {
+        this.rolesList = response.map((item: any) => {
+          return { label: item.role_name, value: item.id };
+        });
+      },
+      (error: any) => {
+        this.rolesList = [];
+      }
+    );
   }
 }
