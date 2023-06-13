@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { Tools } from 'projects/tools/src/lib/tools.service';
 import { CustomValidators } from 'projects/tools/src/lib/custom-forms-validators/custom-forms.module';
+import { ConfigService } from 'projects/tools/src/lib/config.service';
 import { OpenAPIService } from '@services/openAPI.service';
 import { environment } from '@app/environments/environment';
 
@@ -56,10 +57,9 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
   minLengthTerm = 1;
 
   applicationsList: any[] = [
-    { label: 'GovHub', value: 'govhub', id: 1 },
-    { label: 'GovRegistry', value: 'govregistry', id: 2 },
-    { label: 'GovIO', value: 'govio', id: 3 },
-    { label: 'GovIO Planner', value: 'govio-planner', id: 4 },
+    { label: 'GovIO', value: 'govio' },
+    { label: 'GovRegistry', value: 'govregistry' },
+    { label: 'GovIO Planner', value: 'govio_planner' },
   ];
 
   applications$!: Observable<any[]>;
@@ -102,11 +102,15 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
   all_organizations: boolean = false;
   all_services: boolean = false;
 
+  config: any;
+
   constructor(
     private translate: TranslateService,
+    private configService: ConfigService,
     public tools: Tools,
     public apiService: OpenAPIService
   ) {
+    this.config = this.configService.getConfiguration();
   }
 
   ngOnInit() {
@@ -267,7 +271,10 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
 
   _initApplications() {
     if (environment.production) {
-      this.getData('applications').subscribe(
+      const _reverse_url = this.config.AppConfig.GOVAPI.REVERSE;
+      const _pageUrl: string = `${_reverse_url}/applications`;
+
+      this.getData('applications', null, false, _pageUrl).subscribe(
         (response: any) => {
           this.applicationsList = response.items.map((item: any) => {
             return { label: item.application_name, value: item.application_id };
@@ -385,7 +392,7 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
     );
   }
 
-  getData(model: string, term: any = null, application: boolean = false): Observable<any> {
+  getData(model: string, term: any = null, application: boolean = false, pageUrl: string = ''): Observable<any> {
     let _options: any = { params: { limit: 100 } };
     if (term) {
       if (typeof term === 'string' ) {
@@ -418,7 +425,7 @@ export class AuthorizationItemComponent implements OnInit, OnDestroy {
         break;
     }
 
-    return this.apiService.getList(model, _options)
+    return this.apiService.getList(model, _options, pageUrl)
       .pipe(map(resp => {
         if (resp.Error) {
           throwError(resp.Error);

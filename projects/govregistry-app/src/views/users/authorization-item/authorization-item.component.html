@@ -115,7 +115,7 @@
       </div>
       <div class="col-12">
         <div class="form-group">
-          <label class="label-bold" for="role_id">{{ 'APP.LABEL.Role' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'role_id'"></span></label>
+          <label class="label-bold" for="role_id">{{ 'APP.LABEL.Role' | translate }} <span appMarkAsterisk [formGroup]="_formGroup" [controlName]="'role_id'" *ngIf="f['application_id'].value"></span></label>
           <div class="">
             <select class="form-select form-control-sm" id="role_id" formControlName="role_id" [disableControl]="!f['application_id'].value">
               <option value="">{{ 'APP.MESSAGE.ChooseRole' | translate }}</option>
