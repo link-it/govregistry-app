@@ -7,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { VendorsModule } from 'projects/vendors/src/lib/vendors.module';
 import { ComponentsModule } from 'projects/components/src/lib/components.module';
 import { LinkLabModule } from 'projects/link-lab/src/lib/link-lab.module';
+import { DisableControlModule } from '@app/directives/disable-control/disable-control.module';
 
 import { AuthorizationItemComponent } from './authorization-item.component';
 
@@ -17,7 +18,8 @@ import { AuthorizationItemComponent } from './authorization-item.component';
     TranslateModule,
     VendorsModule,
     ComponentsModule,
-    LinkLabModule
+    LinkLabModule,
+    DisableControlModule
   ],
   declarations: [
     AuthorizationItemComponent

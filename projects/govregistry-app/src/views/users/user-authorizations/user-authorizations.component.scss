@@ -5,7 +5,7 @@ $table-header-color: #333333;
 $table-header-border: #d2d2d2;
 $table-border: #d2d2d2;
 $row-bg: #ffffff;
-$columns: 4;
+$columns: 5;
 
 .table-container {
   display: block;
@@ -107,22 +107,25 @@ $columns: 4;
     width: calc(100% / 3) !important; // 1px = border right
 
     &.first {
-      width: 25% !important;
+      width: 15% !important;
     
       &.first-top {
         min-height: auto;
       }
     }
     &.second {
-      width: 25% !important;
+      width: 20% !important;
     }
     &.thirth {
-      width: 25% !important;
+      width: 20% !important;
     }
     &.fourth {
-      width: 15% !important;
+      width: 20% !important;
     }
     &.fifth {
+      width: 15% !important;
+    }
+    &.sixth {
       width: 10% !important;
     }
   }
@@ -171,21 +174,25 @@ $columns: 4;
 }
 
 .first {
-  width: 25%;
+  width: 15%;
 
   &.first-top {
     min-height: 57px;
   }
 }
 .second {
-  width: 25%;
+  width: 20%;
 }
 .thirth {
-  width: 25%;
+  width: 20%;
 }
 .fourth {
-  width: 15%;
+  width: 20%;
 }
 .fifth {
+  width: 15%;
+}
+.sixth {
   width: 10%;
 }
+

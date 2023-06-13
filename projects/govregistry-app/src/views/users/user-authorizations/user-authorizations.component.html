@@ -3,12 +3,12 @@
   <span class="" *ngIf="!_spin"><i class="bi-arrow-clockwise text-white" (click)="refresh()"></i></span> 
   <div class="position-relative" *ngIf="!_spin">
     <div role="group" class="gl-w-full btn-group-">
-      <button aria-label="Add authorization" type="button" class="btn btn-default btn-md gl-button btn-icon" (click)="_onNew()" *ngIf="((_editAuthorizations && !_isNew) || !userAuthorizations?.length) && canEdit">
-        <span class="">{{ 'APP.BUTTON.AddAuthorization' | translate }}</span>
+      <button aria-label="Add authorization" type="button" class="btn btn-confirm btn-md gl-button btn-icon" (click)="_onNew()" *ngIf="((_editAuthorizations && !_isNew) || !userAuthorizations?.length) && canEdit">
+        <i class="bi bi-plus-lg"></i><span class="ms-2">{{ 'APP.BUTTON.AddAuthorization' | translate }}</span>
       </button>
-      <button type="button" class="btn btn-default btn-md gl-button btn-icon ms-3" (click)="_onEditAuthorizations($event)" [tooltip]="(_editAuthorizations ? '' : 'APP.TOOLTIP.EditAuthorizations') | translate" placement="left" *ngIf="userAuthorizations?.length && canEdit">
+      <button type="button" class="btn btn-default btn-md gl-button btn-icon ms-3" [class.btn-default-tertiary]="_editAuthorizations" (click)="_onEditAuthorizations($event)" [tooltip]="(_editAuthorizations ? 'APP.TOOLTIP.CancelEdit' : 'APP.TOOLTIP.EditAuthorizations') | translate" placement="top" *ngIf="userAuthorizations?.length && canEdit">
         <span *ngIf="!_editAuthorizations"><i class="bi-pencil"></i></span>
-        <span *ngIf="_editAuthorizations"><i class="bi-x-lg"></i><span class="ms-2">{{ 'APP.BUTTON.Cancel' | translate }}</span></span>
+        <span *ngIf="_editAuthorizations"><i class="bi-x-lg"></i><span class="ms-2 d-none">{{ 'APP.BUTTON.Cancel' | translate }}</span></span>
       </button>
     </div>
   </div>
@@ -21,19 +21,22 @@
 <div class="AUTHORIZATIONS-LIST-FLEX py-2" *ngIf="userAuthorizations.length">
   <div class="table-container fs-smaller" role="table">
     <div class="flex-table header border-top border-bottom align-items-center" role="rowgroup">
-      <div class="flex-table-row first fw-bold" role="columnheader">
+      <div class="flex-table-row first fw-bold text-start text-truncate" role="columnheader">
+        <span class="">{{ 'APP.LABEL.Application' | translate }}</span>
+      </div>
+      <div class="flex-table-row second fw-bold" role="columnheader">
         <span class="">{{ 'APP.LABEL.Role' | translate }}</span>
       </div>
-      <div class="flex-table-row second fw-bold text-start text-truncate" role="columnheader">
+      <div class="flex-table-row thirth fw-bold text-start text-truncate" role="columnheader">
         <span class="">{{ 'APP.LABEL.Organizations' | translate }}</span>
       </div>
-      <div class="flex-table-row thirth fw-bold text-start text-truncate" role="columnheader">
+      <div class="flex-table-row fourth fw-bold text-start text-truncate" role="columnheader">
         <span class="">{{ 'APP.LABEL.Services' | translate }}</span>
       </div>
-      <div class="flex-table-row fourth fw-bold text-center" role="columnheader">
+      <div class="flex-table-row fifth fw-bold text-center" role="columnheader">
         <span class="">{{ 'APP.LABEL.ExpirationDate' | translate }}</span>
       </div>
-      <div class="flex-table-row fifth fw-bold text-end" role="columnheader">
+      <div class="flex-table-row sixth fw-bold text-end" role="columnheader">
         <span class="">{{ '&nbsp;' | translate }}</span>
       </div>
     </div>

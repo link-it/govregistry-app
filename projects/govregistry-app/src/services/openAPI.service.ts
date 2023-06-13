@@ -79,6 +79,13 @@ export class OpenAPIService {
     return this.http.delete<any>(_url, options);
   }
 
+  deleteElementRelated(name: string, id: any, related: string, options?: IRequestOptions) {
+    if(!options) options = {};
+    
+    const _url = `${this.proxyPath}${name}/${id}/${related}`;
+    return this.http.delete<any>(_url, options);
+  }
+
   deleteElementImage(name: string, id: any, type: string, options?: IRequestOptions) {
     if(!options) options = {};
     

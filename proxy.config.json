@@ -1,4 +1,13 @@
 {
+  "/api/applications": {
+    "target": "http://172.16.1.121/govhub-reverse-proxy/v1",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    }
+  },
   "/govregistry/api/*": {
     "target": "http://172.16.1.121:8083/govregistry/api/v1",
     "secure": false,
