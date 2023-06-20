@@ -15,7 +15,7 @@ variables:
     PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/govregistry-app/${CI_COMMIT_TAG}"
     LINKIT_IMAGE_REGISTRY: lab.link.it
     LINKIT_IMAGE_REGISTRY_USER: "gitlab-runner"
-    LINKIT_IMAGE_REGSITRY_PASS: "G!tl4bd@ashRunN3R"
+    LINKIT_IMAGE_REGISTRY_PASS: "G!tl4bd@ashRunN3R"
 default:
     cache:
         paths:
