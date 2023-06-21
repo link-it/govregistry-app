@@ -13,6 +13,9 @@ variables:
     SONAR_PASSWORD: "Password@123"
     DEPLOY_STAGING_SSH_HOST: "ec2-user@172.16.1.121"
     PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/govregistry-app/${CI_COMMIT_TAG}"
+    LINKIT_IMAGE_REGISTRY: lab.link.it
+    LINKIT_IMAGE_REGISTRY_USER: "gitlab-runner"
+    LINKIT_IMAGE_REGISTRY_PASS: "G!tl4bd@ashRunN3R"
 default:
     cache:
         paths:
@@ -57,6 +60,16 @@ release:
             {\"name\":\"govregistry-app-${CI_COMMIT_TAG}.tgz\", \"url\":\"${PACKAGE_REGISTRY_URL}/govregistry-app-${CI_COMMIT_TAG}.tgz\"}
           ]"'
 
+container:
+  stage: release
+  image: docker
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - docker build -f container/Dockerfile --build-arg release_tag=$CI_COMMIT_TAG -t ${LINKIT_IMAGE_REGISTRY}/govregistry-app:${CI_COMMIT_TAG}  .
+    - echo "${LINKIT_IMAGE_REGISTRY_PASS}" | docker login -u ${LINKIT_IMAGE_REGISTRY_USER} --password-stdin ${LINKIT_IMAGE_REGISTRY} 
+    - docker push ${LINKIT_IMAGE_REGISTRY}/govregistry-app:${CI_COMMIT_TAG}
+    
 deploy_staging:
   stage: deploy
   image: kroniak/ssh-client
