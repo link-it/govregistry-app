@@ -1,6 +1,6 @@
-# GovIO App 
+# GovRegistry App 
 
-WebApp di GovNotify
+WebApp di GovRegistry
 
 # Licenza
 
