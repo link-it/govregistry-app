@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # GovRegistry App 
 
 WebApp di GovRegistry
